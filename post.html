@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Blog</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    /* Use a consistent indentation and formatting */
+    #posts {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 20px; /* added some margin to make it look better */
+    }
+
+   .post {
+      width: 300px;
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid black;
+      border-radius: 10px; /* added some rounded corners */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* added some subtle shadow */
+    }
+
+   .post img {
+      width: 100%;
+      height: 150px; /* added a fixed height for images */
+      object-fit: cover; /* make images fit the container */
+      border-radius: 10px 10px 0 0; /* rounded corners for images */
+    }
+
+   .likes {
+      display: flex;
+      align-items: center;
+      margin-top: 10px; /* added some margin to separate likes from content */
+    }
+
+   .likes i {
+      margin-right: 5px;
+      font-size: 18px; /* increased font size for better visibility */
+    }
+  </style>
+</head>
+<body>
+  <h1>Mon Blog</h1>
+
+  <div id="posts"></div>
+
+  <form id="postForm">
+    <input type="text" id="title" placeholder="Titre" required>
+    <input type="text" id="content" placeholder="Contenu" required>
+    <input type="file" id="file" required>
+    <button type="submit">Publier</button>
+  </form>
+
+  <script>
+    // Use a consistent naming convention (camelCase)
+    const postForm = document.getElementById("postForm");
+    const postsContainer = document.getElementById("posts");
+
+    postForm.addEventListener("submit", handleSubmit);
+
+    function handleSubmit(event) {
+      event.preventDefault();
+
+      const titleInput = document.getElementById("title");
+      const contentInput = document.getElementById("content");
+      const fileInput = document.getElementById("file");
+
+      const title = titleInput.value;
+      const content = contentInput.value;
+      const file = fileInput.files[0];
+
+      const reader = new FileReader();
+      reader.onload = handleImageLoad;
+      reader.readAsDataURL(file);
+
+      // Reset form fields
+      titleInput.value = "";
+      contentInput.value = "";
+      fileInput.value = "";
+    }
+
+    function handleImageLoad(event) {
+      const post = document.createElement("div");
+      post.classList.add("post");
+
+      const image = document.createElement("img");
+      image.src = event.target.result;
+      post.appendChild(image);
+
+      const postTitle = document.createElement("h2");
+      postTitle.textContent = title;
+      post.appendChild(postTitle);
+
+      const postContent = document.createElement("p");
+      postContent.textContent = content;
+      post.appendChild(postContent);
+
+      const likesContainer = document.createElement("div");
+      likesContainer.classList.add("likes");
+
+      const likeIcon = document.createElement("i");
+      likeIcon.classList.add("fa", "fa-thumbs-up");
+      likesContainer.appendChild(likeIcon);
+
+      const likeCount = document.createElement("span");
+      likeCount.textContent = "0";
+      likesContainer.appendChild(likeCount);
+
+      post.appendChild(likesContainer);
+
+      postsContainer.appendChild(post);
+    }
+  </script>
+</body>
+</html>
